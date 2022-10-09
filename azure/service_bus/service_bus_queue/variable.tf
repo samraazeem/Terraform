@@ -10,6 +10,10 @@ variable "lock_duration" {
     description = "The lock duration for the subscription as an ISO 8601 duration."
     type = string
     default = "P0DT0H1M0S"
+    validation {
+        condition = var.lock_duration == null || tonumber(trimsuffix(trimprefix(var.lock_duration == null ? "0" : var.lock_duration, "P0DT0H"), "M0S")) <= 5 
+        error_message = "Lock duration should not be more than 5 minutes for Service Bus Subscription."
+  }
 }
 variable "max_message_size_in_kilobytes" {
     description = "Integer value which controls the maximum size of a message allowed on the queue for Premium SKU."
@@ -53,6 +57,10 @@ variable "status" {
     description = "The status of the Queue."
     type = string
     default = "Active"
+    validation {
+      condition = contains(["Active", "Creating", "Deleting", "ReceiveDisabled", "Disabled", "Renaming", "SendDisabled", "Unknown"], var.status == null ? "Active" : var.status)
+      error_message = "Invalid value for status for service bus topic."
+    }
 }
 variable "enable_batched_operations" {
     description = "Boolean flag which controls whether server-side batched operations are enabled."
@@ -62,6 +70,10 @@ variable "enable_batched_operations" {
 variable "auto_delete_on_idle" {
     description = "The idle interval after which the queue is automatically deleted as an ISO 8601 duration."
     type = string
+    validation {
+        condition = var.auto_delete_on_idle == null || tonumber(trimsuffix(trimprefix(var.auto_delete_on_idle == null ? "0" : var.auto_delete_on_idle, "PT"), "M")) >= 5
+        error_message = "Auto Delete interval should be more than 5 minutes for Service Bus Queue."
+  }
 }
 variable "enable_partitioning" {
     description = "Boolean flag which controls whether to enable the queue to be partitioned across multiple message brokers."
