@@ -13,6 +13,10 @@ variable "resource_group_name" {
 variable "service_bus_sku" {
     description = "Defines which tier to use."
     type = string
+    validation {
+      condition = contains(["Basic", "Standard", "Premium"], var.service_bus_sku)
+      error_message = "Invalid value for service bus sku"
+    }
 }
 variable "identity" {
     description = "specifies the type of Managed Service Identity that should be configured on this API Management Service. Type is required parameter."
@@ -41,6 +45,10 @@ variable "minimum_tls_version" {
     description = "The minimum supported TLS version for this Service Bus Namespace."
     type = string
     default = ""
+    validation {
+      condition = var.minimum_tls_version == null || contains(["1.0", "1.1", "1.2"], var.minimum_tls_version == null ? "1.2" : var.minimum_tls_version)
+      error_message = "Invalid tls version"
+    }
 }
 variable "zone_redundant" {
     description = "Whether or not this resource is zone redundant. sku needs to be Premium."
