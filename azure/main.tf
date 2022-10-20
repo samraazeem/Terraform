@@ -19,7 +19,7 @@ module "service_bus" {
 }
 
 module "kubernetes" {
-  source = "../templates-iac/aks_new"
+  source = "../templates-iac/aks"
   for_each = { for kubes in var.kubernetes: kubes.aks_name => kubes }
   aks_name = each.value.aks_name
   location = each.value.location
