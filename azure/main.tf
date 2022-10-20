@@ -17,3 +17,15 @@ module "service_bus" {
     module.resource_groups
   ]
 }
+
+resource "null_resource" "helm" {
+
+  provisioner "local-exec" {
+    interpreter = ["powershell.exe", "-Command"]
+    command = <<-EOT
+		  az aks command invoke --resource-group ${var.rg_name} --name ${var.aks_name} --command "helm repo add ${var.nginx_ingress_name} ${var.nginx_repository}; helm repo update; helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx --version 4.3.0 --create-namespace --namespace ingress-nginx --set controller.service.loadBalancerIP=${var.aks_ilb_ingress_ip} --set controller.service.annotations.'service\.beta\.kubernetes\.io/azure-load-balancer-internal'=true"
+    EOT
+  }
+
+  # depends_on = [kubectl_manifest.gardener_shoot]
+}
