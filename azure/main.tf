@@ -17,7 +17,7 @@ module "service_bus" {
     module.resource_groups
   ]
 }
-	  
+
 module "kubernetes" {
   source = "../templates-iac/aks"
   for_each = { for kubes in var.kubernetes: kubes.aks_name => kubes }
@@ -28,7 +28,7 @@ module "kubernetes" {
   nginx_repository = each.value.nginx_repository
   nginx_ingress_name =each.value.nginx_ingress_name
 }
-	
+
 resource "null_resource" "helm" {
 
   provisioner "local-exec" {
