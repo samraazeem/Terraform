@@ -1,0 +1,9 @@
+jobs:
+  build:
+  name: Hello world
+  runs-on: ubuntu-latest
+  steps:
+  - uses: actions/checkout@v2
+  - name: Demo WorjFlow
+    run: |
+      echo Hello World
