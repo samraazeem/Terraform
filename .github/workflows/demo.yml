@@ -2,6 +2,7 @@ name: Demo Workflow
 on:
   - push
 jobs:
+ Echo-Hello-World:
   runs-on: ubuntu-latest
   steps:
     - name: Demo WorjFlow
