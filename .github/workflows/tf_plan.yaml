@@ -1,0 +1,12 @@
+name: Terraform Plan Workflow
+on:
+  - push
+jobs:
+ Terraform-Plan:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Code Checkout
+      uses: actions/checkout@v2
+    - name: List Files
+      run : |
+       ls -lrth
