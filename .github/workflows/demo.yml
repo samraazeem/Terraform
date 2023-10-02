@@ -1,11 +1,10 @@
 name: Demo Workflow
-
-on: [push]
-
+on:
+  - push
 jobs:
-name: Hello world
-runs-on: ubuntu-latest
-steps:
-  - name: Demo WorjFlow
-    run: |
-      echo Hello World
+  name: Hello world
+  runs-on: ubuntu-latest
+  steps:
+    - name: Demo WorjFlow
+      run: |
+        echo Hello World
