@@ -5,6 +5,6 @@ jobs:
  Echo-Hello-World:
   runs-on: ubuntu-latest
   steps:
-    - name: Demo WorjFlow
+    - name: Demo WorkFlow
       run: |
         echo Hello World
