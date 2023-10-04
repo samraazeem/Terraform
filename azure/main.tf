@@ -40,3 +40,31 @@ resource "null_resource" "helm" {
 
   # depends_on = [kubectl_manifest.gardener_shoot]
 }
+
+# ACR
+module "acr" {
+  source                        = "../templates-iac/azurerm/acr"
+  for_each                      = { for acr in var.containerRegistry : acr.acr_name => acr }
+  location                      = var.location
+  resource_group_name           = each.value.resource_group_name
+  tags                          = merge(var.common_tags, each.value.tags)
+  acr_name                      = each.value.acr_name
+  sku                           = each.value.sku
+  admin_enabled                 = each.value.admin_enabled
+  public_network_access_enabled = each.value.public_network_access_enabled
+  quarantine_policy_enabled     = each.value.quarantine_policy_enabled
+  zone_redundancy_enabled       = each.value.zone_redundancy_enabled
+  export_policy_enabled         = each.value.export_policy_enabled
+  anonymous_pull_enabled        = each.value.anonymous_pull_enabled
+  data_endpoint_enabled         = each.value.data_endpoint_enabled
+  network_rule_bypass_option    = each.value.network_rule_bypass_option
+  retention_policy              = each.value.retention_policy
+  trust_policy                  = each.value.trust_policy
+  identity                      = each.value.identity
+  encryption                    = each.value.encryption
+  georeplications               = each.value.georeplications
+  network_rule_set              = each.value.network_rule_set
+  depends_on = [
+    module.resource_groups
+  ]
+}
