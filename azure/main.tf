@@ -1,3 +1,13 @@
+#-----------------------------Resource Groups-----------------------------------------------#
+module "resource_groups" {
+  source   = "../templates-iac/azurerm/rg"
+  for_each = { for rg in var.resource_groups : rg.name => rg }
+  rg_name  = each.value.name
+  location = lookup(each.value, "location", null) == null ? var.location : each.value.location
+  tags     = merge(var.management_common_tags, each.value.tags)
+}
+#-----------------------------Resource Groups-----------------------------------------------#
+
 module "service_bus" {
   source                                   = "../modules/service_bus/service_bus_namespace"
   for_each                                 = {for sb in var.service_bus_namespaces: sb.service_bus_name => sb}
