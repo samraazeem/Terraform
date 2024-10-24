@@ -78,3 +78,47 @@ module "acr" {
     module.resource_groups
   ]
 }
+
+#-----------------------------MSSQL Server----------------------------------------------#
+module "mssql" {
+  source                               = "../templates-iac/azurerm/mssql"
+  for_each                             = { for mssql in var.mssql_server : mssql.mssql_server_name => mssql }
+  name                                 = each.value.mssql_server_name
+  rg_name                              = each.value.rg_name
+  location                             = var.location
+  mssql_version                        = each.value.mssql_version
+  administrator_login                  = lookup(each.value, "administrator_login", null)
+  administrator_login_password         = lookup(each.value, "administrator_login_password", null)
+  minimum_tls_version                  = lookup(each.value, "minimum_tls_version", "1.2")
+  connection_policy                    = lookup(each.value, "connection_policy", "Default")
+  tags                                 = merge(var.common_tags, each.value.tags)
+  public_network_access_enabled        = lookup(each.value, "public_network_access_enabled", null)
+  outbound_network_restriction_enabled = lookup(each.value, "outbound_network_restriction_enabled", null)
+  azuread_administrator_object         = lookup(each.value, "azuread_administrator_object", null)
+  azuread_administrator_name           = lookup(each.value, "azuread_administrator_name", null)
+  identity                             = lookup(each.value, "identity", null)
+  firewall_rules                       = lookup(each.value, "firewall_rules", [])
+  net_subnets                          = lookup(each.value, "net_subnets", [])
+  enable_auditing                      = lookup(each.value, "enable_auditing", false)
+  auditing_settings = {
+    primary_blob_endpoint = lookup(each.value, "enable_auditing", false) == true ? module.storageaccounts[lookup(each.value, "auditing_storage_account", "")].primary_blob_endpoint : null
+    blob_access_key       = null # lookup(each.value,"enable_auditing", false) == true ? module.storageaccounts[lookup(each.value,"auditing_storage_account", "")].primary_access_key : null
+    is_secondary_key      = false
+    retention_in_days     = lookup(each.value, "auditing_retention_days", 90)
+    storage_acconut_id    = lookup(each.value, "enable_auditing", false) == true ? module.storageaccounts[lookup(each.value, "auditing_storage_account", "")].id : null
+  }
+  enable_sql_defender = lookup(each.value, "enable_sql_defender", false)
+  sql_defender_settings = {
+    email_subscription_admins = lookup(each.value, "enable_sql_defender", false) == true ? each.value.sql_defender_settings.email_subscription_admins : null
+    emails                    = lookup(each.value, "enable_sql_defender", false) == true ? each.value.sql_defender_settings.emails : null
+    conainer_name             = lookup(each.value, "enable_sql_defender", false) == true ? each.value.sql_defender_settings.conainer_name : null
+    primary_blob_endpoint     = lookup(each.value, "enable_sql_defender", false) == true ? module.storageaccounts[each.value.sql_defender_settings.defender_storage_account].primary_blob_endpoint : null
+    primary_access_key        = null #lookup(each.value,"enable_sql_defender", false) == true ? module.storageaccounts[each.value.sql_defender_settings.defender_storage_account].primary_access_key : null
+  }
+  depends_on = [
+    module.resource_groups,
+    module.subnets,
+    module.storageaccounts
+  ]
+}
+#-----------------------------MSSQL Server----------------------------------------------#
