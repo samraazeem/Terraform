@@ -20,6 +20,7 @@ Terraform is an example of a declarative approach to deploying infrastructure as
 HashiCorp, the developer of Terraform, announced in 2023 a significant change in its licensing model. It has, therefore, changed the Terraform from MPL 2.0, which is an open-source license, to Business Source License (BSL), and it takes Terraform's code to build a competitive service for HashiCorp's solutions but gives non-commercial and individual usage rights. This ignited a huge row in the open-source community due to the fact that many organizations relied on Terraform due to its earlier license, which in effect has made it absolutely free to access and modify.
 
 Changing the license for Terraform from MPL 2.0 to the Business Source License affects the users in the following ways:
+The BSL license restricts the use of future Terraform versions with offerings that HashiCorp considers competitive. This means that Terraform cannot be used if it competes with HashiCorp and is hosted or embedded in products. 
 
 - Commercial Restrictions- The users and organizations would be precluded from using the code for Terraform for building competing services or products. This, in turn, restricts customized versions of Terraform, mainly on commercial levels, to third-party providers who will create and distribute them.
 
